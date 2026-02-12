@@ -1,0 +1,13 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Flat101 Product API
+            description: API REST para gestión de productos
+            version: 1.0.0
+        servers:
+            - url: http://localhost
+              description: Development server
+    areas:
+        default:
+            path_patterns:
+                - ^/api(?!/doc)
