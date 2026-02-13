@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductControllerTest extends WebTestCase
 {
@@ -100,6 +101,59 @@ class ProductControllerTest extends WebTestCase
 
         // Verificar que createdAt es una fecha válida
         $this->assertNotFalse(DateTime::createFromFormat(DateTimeInterface::ATOM, $data[0]['createdAt']));
+    }
+
+    public function testCreateProductSuccessfully(): void
+    {
+        // 1. Petición POST con datos válidos
+        $this->client->request(
+            'POST',
+            '/api/products',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'name' => 'Smartphone XYZ',
+                'price' => 499.99
+            ])
+        );
+
+        // 2. Verificamos respuesta de la API
+        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
+        $this->assertResponseHeaderSame('Content-Type', 'application/json');
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals('Smartphone XYZ', $data['name']);
+        $this->assertEquals(499.99, $data['price']);
+
+        // 3. Verificamos persistencia
+        $product = $this->entityManager->getRepository(Product::class)
+                                       ->findOneBy(['name' => 'Smartphone XYZ']);
+
+        $this->assertNotNull($product);
+        $this->assertEquals(499.99, $product->getPrice());
+    }
+
+    public function testCreateProductReturns400WithInvalidData(): void
+    {
+        // Enviamos un nombre demasiado corto y un precio válido
+        $this->client->request(
+            'POST',
+            '/api/products',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'name' => 'Ab',
+                'price' => 10.0
+            ])
+        );
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+
+        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertEquals('El nombre debe tener al menos 3 caracteres', $data['error']);
     }
 }
 
