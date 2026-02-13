@@ -32,7 +32,7 @@ class Product
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Groups(['product:read'])]
-    private DateTimeInterface $createdAt ;
+    private DateTimeInterface $createdAt;
 
     public function __construct(string $name, float $price)
     {
@@ -58,6 +58,7 @@ class Product
         }
 
         $this->name = $name;
+
         return $this;
     }
 
@@ -73,11 +74,20 @@ class Product
         }
 
         $this->price = $price;
+
         return $this;
     }
 
     public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function update(string $name, float $price): self
+    {
+        $this->setName($name);
+        $this->setPrice($price);
+
+        return $this;
     }
 }

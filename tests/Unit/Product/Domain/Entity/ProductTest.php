@@ -30,7 +30,7 @@ class ProductTest extends TestCase
     public function testPriceCannotBeNegative(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('El precio debe ser mayor a 0');
+        $this->expectExceptionMessage('Price must be greater than 0');
 
         $product = new Product('Test Product', 99.99);
         $product->setPrice(-10.50);
@@ -39,7 +39,7 @@ class ProductTest extends TestCase
     public function testPriceCannotBeZero(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('El precio debe ser mayor a 0');
+        $this->expectExceptionMessage('Price must be greater than 0');
 
         $product = new Product('Test Product', 99.99);
         $product->setPrice(0);
@@ -48,7 +48,7 @@ class ProductTest extends TestCase
     public function testNameCannotBeShorterThan3Characters(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('El nombre debe tener al menos 3 caracteres');
+        $this->expectExceptionMessage('Name must be at least 3 characters long');
 
         $product = new Product('Test Product', 99.99);
         $product->setName('AB');

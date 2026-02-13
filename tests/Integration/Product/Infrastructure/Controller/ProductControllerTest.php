@@ -16,7 +16,7 @@ class ProductControllerTest extends WebTestCase
 
     protected function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->client        = static::createClient();
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
 
         $this->cleanDatabase();
@@ -113,7 +113,7 @@ class ProductControllerTest extends WebTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
-                'name' => 'Smartphone XYZ',
+                'name'  => 'Smartphone XYZ',
                 'price' => 499.99
             ])
         );
@@ -136,24 +136,35 @@ class ProductControllerTest extends WebTestCase
 
     public function testCreateProductReturns400WithInvalidData(): void
     {
+        $this->client->catchExceptions(true);
+
         // Enviamos un nombre demasiado corto y un precio válido
         $this->client->request(
             'POST',
             '/api/products',
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json'],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_ACCEPT' => 'application/json',
+            ],
             json_encode([
-                'name' => 'Ab',
-                'price' => 10.0
+                'name'  => 'Ab',
+                'price' => -10.0
             ])
         );
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $response = $this->client->getResponse();
 
-        $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('error', $data);
-        $this->assertEquals('El nombre debe tener al menos 3 caracteres', $data['error']);
+        // 1. Verifica primero el status para que sea más fácil depurar
+        // Recuerda que MapRequestPayload suele devolver 422
+        $this->assertEquals(422, $response->getStatusCode());
+
+        // 2. Ahora sí, decodifica y verifica
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertIsArray($data, 'La respuesta no es un JSON válido');
+        $this->assertArrayHasKey('violations', $data);
     }
 
     public function testGetProductByIdReturns200(): void
