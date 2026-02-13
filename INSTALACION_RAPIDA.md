@@ -5,9 +5,7 @@ Esta guía te ayudará a descargar y configurar el proyecto en pocos minutos usa
 ## 📋 Requisitos Previos
 
 Asegúrate de tener instalado:
-- Docker
-- PHP 8.3 o superior
-- Composer
+- Docker y Docker Compose
 - Git
 
 ---
@@ -20,7 +18,7 @@ git clone https://github.com/mmloureiro/flat_101_product.git
 cd flat_101_product
 
 # Paso 2: Levantar y configurar todo (build + install + migrations + fixtures)
-make rebuild
+make init
 
 # La API estará disponible en http://localhost:8080
 ```

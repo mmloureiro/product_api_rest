@@ -251,7 +251,7 @@ up: docker-up
 down: docker-down
 build: docker-build
 restart: docker-restart
-rebuild: docker-rebuild
+init: docker-rebuild
 shell: docker-shell
 
 # Make silent for better output

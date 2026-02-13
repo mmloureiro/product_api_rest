@@ -1,4 +1,4 @@
-# Product API - Prueba Técnica
+# Product API
 
 API RESTful para gestión de productos desarrollada con Symfony 6.4 y PHP 8.3, siguiendo arquitectura hexagonal y principios de Clean Architecture.
 
@@ -13,22 +13,21 @@ API RESTful para gestión de productos desarrollada con Symfony 6.4 y PHP 8.3, s
 
 ## 📋 Requisitos Previos
 
-- PHP 8.3 o superior
-- Composer
-- Extensiones PHP: ctype, iconv, sqlite3
+Para ejecutar este proyecto de forma rápida y aislada, solo necesitas tener instalados:
+- Docker y Docker Compose
+- Git
+
+(No es necesario tener PHP, Composer o bases de datos instalados en tu máquina local; todo se ejecuta dentro del contenedor).
 
 ## 🔧 Instalación
 
-### Instalación Rápida con Makefile (Recomendado)
+### Instalación Rápida con Makefile
 
 El proyecto incluye un Makefile que automatiza toda la instalación:
 
 ```bash
 # Instalación completa (dependencias + base de datos + datos de prueba)
-make setup
-
-# Ver servidor en http://localhost:8000
-make serve
+make init
 ```
 
 Para ver todos los comandos disponibles:
@@ -36,82 +35,14 @@ Para ver todos los comandos disponibles:
 make help
 ```
 
-### Instalación Manual
-
-**Si usas Docker**, primero accede al contenedor:
-```bash
-make shell
-# O manualmente:
-docker-compose exec php bash
-```
-1. Clonar el repositorio:
-```bash
-git clone https://github.com/mmloureiro/fla# 
-composer install
-
-# O fuera de Docker (solo si no usas Docker):
-make install-localt_101_product.git
-cd flat_101_product
-```
-
-2. Instalar dependencias:
-```bash
-# Dentro del contenedor Docker:
-composer install
-# O usando Make:
-make install-local
-```
-
-3. Crear la base de datos y ejecutar migraciones:
-```bash
-# Dentro del contenedor Docker:
-php bin/console doctrine:migrations:migrate --no-interaction
-# O usando Make:
-make setup-db
-```
-
-4. (Opcional) Cargar datos de prueba:
-```bash
-# Dentro del contenedor Docker:
-php bin/console doctrine:fixtures:load --no-interaction
-# O usando Make:
-make fixtures
-```
-
 ## 🏃 Ejecución
 
-### Servidor de desarrollo
-
-Con Makefile (recomendado):
-```bash
-make serve
-```
-
-Con Symfony CLI:
-```bash
-symfony server:start
-# O usando Make:
-make serve-symfony
-```
-
-Con PHP built-in server:
-```bash
-php -S localhost:8000 -t public
-```
-
-La API estará disponible en: `http://localhost:8000`
-
-### Con Docker
 
 ```bash
 # Iniciar contenedores
-make docker-up
-# O simplemente:
 make up
 
 # Detener contenedores
-make docker-down
-# O:
 make down
 ```
 
@@ -183,17 +114,10 @@ Con Makefile:
 make test-coverage
 ```
 
-O manualmente (dentro del contenedor si usas Docker):
-```bash
-php bin/phpunit --coverage-html var/coverage
-```
-
 Ver reporte en: `var/coverage/index.html`
 
 ### Tests con formato detallado
 ```bash
-php bin/phpunit --testdox
-# O:
 make test
 ```
 
@@ -208,13 +132,6 @@ make test-integration
 
 # Tests rápidos (sin coverage)
 make test-quick
-```
-
-### Tests con Docker
-
-```bash
-make docker-test
-make docker-test-coverage
 ```
 
 ## 🏗️ Estructura del Proyecto
