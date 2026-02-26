@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Flat101\Product\Application\Find;
 
-use Flat101\Product\Domain\Entity\Product;
+use Flat101\Product\Application\Dto\ProductResponseDto;
+use Flat101\Product\Domain\Exception\ProductNotFoundException;
 use Flat101\Product\Domain\Repository\ProductRepositoryInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FindProductUseCase
 {
@@ -13,15 +15,14 @@ class FindProductUseCase
     ) {
     }
 
-    public function execute(int $id): Product
+    public function execute(int $id): ProductResponseDto
     {
         $product = $this->repository->find($id);
 
         if (!$product) {
-            throw new NotFoundHttpException("Product with ID $id not found");
+            throw ProductNotFoundException::fromId($id);
         }
 
-        return $product;
+        return ProductResponseDto::fromEntity($product);
     }
-
 }
