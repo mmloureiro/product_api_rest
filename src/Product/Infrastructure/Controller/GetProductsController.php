@@ -47,6 +47,6 @@ class GetProductsController extends AbstractController
     {
         $products = $this->useCase->execute();
 
-        return $this->json($products, Response::HTTP_OK, [], ['groups' => 'product:read']);
+        return new JsonResponse($products, Response::HTTP_OK);
     }
 }

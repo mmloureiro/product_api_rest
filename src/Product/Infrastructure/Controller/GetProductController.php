@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Flat101\Product\Infrastructure\Controller;
 
 use Flat101\Product\Application\Find\FindProductUseCase;
+use Flat101\Product\Domain\Exception\ProductNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use OpenApi\Attributes as OA;
 
 #[Route('/api/products/{id}', name: 'api_products_get', methods: ['GET'])]
@@ -59,12 +58,13 @@ class GetProductController extends AbstractController
     )]
     public function __invoke(
         int $id,
-        FindProductUseCase $useCase,
-        SerializerInterface $serializer
+        FindProductUseCase $useCase
     ): JsonResponse {
         try {
-            $product = $useCase->execute($id);
-        } catch (NotFoundHttpException $exception) {
+            $productResponse = $useCase->execute($id);
+
+            return new JsonResponse($productResponse, Response::HTTP_OK);
+        } catch (ProductNotFoundException $exception) {
             return new JsonResponse(
                 [
                     'error' => $exception->getMessage(),
@@ -73,12 +73,5 @@ class GetProductController extends AbstractController
                 Response::HTTP_NOT_FOUND
             );
         }
-
-        return new JsonResponse(
-            $serializer->serialize($product, 'json', ['groups' => 'product:read']),
-            Response::HTTP_OK,
-            [],
-            true
-        );
     }
 }

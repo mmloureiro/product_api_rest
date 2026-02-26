@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use OpenApi\Attributes as OA;
 
 #[Route('/api/products', name: 'api_products_create', methods: ['POST'])]
@@ -61,16 +60,12 @@ class CreateProductController extends AbstractController
     )]
     public function __invoke(
         #[MapRequestPayload] ProductRequestDto $dto,
-        CreateProductUseCase $useCase,
-        SerializerInterface $serializer
+        CreateProductUseCase $useCase
     ): JsonResponse {
         try {
-            $product = $useCase->execute($dto->name, $dto->price);
+            $productResponse = $useCase->execute($dto->name, $dto->price);
 
-            return new JsonResponse(
-                $serializer->serialize($product, 'json', ['groups' => 'product:read']),
-                Response::HTTP_CREATED, [], true
-            );
+            return new JsonResponse($productResponse, Response::HTTP_CREATED);
         } catch (Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }

@@ -7,6 +7,9 @@ framework:
 
     #esi: true
     #fragments: true
+    serializer:
+        mapping:
+            paths: ['%kernel.project_dir%/config/serializer/mapping.xml']
 
 when@test:
     framework:

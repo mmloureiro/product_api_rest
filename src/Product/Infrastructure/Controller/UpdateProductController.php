@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Flat101\Product\Infrastructure\Controller;
 
 use Flat101\Product\Application\Update\UpdateProductUseCase;
+use Flat101\Product\Domain\Exception\ProductNotFoundException;
 use Flat101\Product\Infrastructure\Dto\ProductRequestDto;
 use InvalidArgumentException;
 use OpenApi\Attributes as OA;
@@ -12,9 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/products/{id}', name: 'api_products_update', methods: ['PUT'], requirements: ['id' => '\d+'])]
 class UpdateProductController extends AbstractController
@@ -58,33 +57,18 @@ class UpdateProductController extends AbstractController
             ]
         )
     )]
-    #[OA\Response(
-        response: 400,
-        description: 'Invalid input data',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'error', type: 'string', example: 'Missing name or price')
-            ]
-        )
-    )]
     public function __invoke(
         int $id,
         #[MapRequestPayload] ProductRequestDto $dto,
-        UpdateProductUseCase $useCase,
-        SerializerInterface $serializer
+        UpdateProductUseCase $useCase
     ): JsonResponse {
         try {
-            $product = $useCase->execute($id, $dto->name, $dto->price);
+            $productResponse = $useCase->execute($id, $dto->name, $dto->price);
 
+            return new JsonResponse($productResponse, Response::HTTP_OK);
+        } catch (ProductNotFoundException $e) {
             return new JsonResponse(
-                $serializer->serialize($product, 'json', ['groups' => 'product:read']),
-                Response::HTTP_OK,
-                [],
-                true
-            );
-        } catch (NotFoundHttpException $e) {
-            return new JsonResponse(
-                ['error' => $e->getMessage(), 'code' => Response::HTTP_NOT_FOUND],
+                ['error' => $e->getMessage()],
                 Response::HTTP_NOT_FOUND
             );
         } catch (InvalidArgumentException $e) {

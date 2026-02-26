@@ -20,8 +20,8 @@ doctrine:
         mappings:
             Flat101Product:
                 is_bundle: false
-                type: attribute
-                dir: '%kernel.project_dir%/src/Product/Domain/Entity'
+                type: xml
+                dir: '%kernel.project_dir%/src/Product/Infrastructure/Persistence/Mapping'
                 prefix: 'Flat101\Product\Domain\Entity'
                 alias: Product
         controller_resolver:
