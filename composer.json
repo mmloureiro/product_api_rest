@@ -40,12 +40,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Flat101\\": "src/"
+            "App\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Flat101\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/"
         }
     },
     "replace": {

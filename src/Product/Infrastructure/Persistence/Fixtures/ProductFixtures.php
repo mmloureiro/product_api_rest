@@ -1,8 +1,8 @@
 <?php
 
-namespace Flat101\Product\Infrastructure\Persistence\Fixtures;
+namespace App\Product\Infrastructure\Persistence\Fixtures;
 
-use Flat101\Product\Domain\Entity\Product;
+use App\Product\Domain\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 

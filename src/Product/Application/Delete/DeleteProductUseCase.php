@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Application\Delete;
+namespace App\Product\Application\Delete;
 
-use Flat101\Product\Domain\Repository\ProductRepositoryInterface;
+use App\Product\Domain\Repository\ProductRepositoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeleteProductUseCase

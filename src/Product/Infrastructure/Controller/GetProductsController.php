@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Infrastructure\Controller;
+namespace App\Product\Infrastructure\Controller;
 
-use Flat101\Product\Application\List\ListProductsUseCase;
+use App\Product\Application\List\ListProductsUseCase;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

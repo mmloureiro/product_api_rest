@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Application\Create;
+namespace App\Product\Application\Create;
 
-use Flat101\Product\Application\Dto\ProductResponseDto;
-use Flat101\Product\Domain\Entity\Product;
-use Flat101\Product\Domain\Repository\ProductRepositoryInterface;
-use Flat101\Product\Domain\ValueObject\ProductName;
-use Flat101\Product\Domain\ValueObject\ProductPrice;
+use App\Product\Application\Dto\ProductResponseDto;
+use App\Product\Domain\Entity\Product;
+use App\Product\Domain\Repository\ProductRepositoryInterface;
+use App\Product\Domain\ValueObject\ProductName;
+use App\Product\Domain\ValueObject\ProductPrice;
 
 class CreateProductUseCase
 {

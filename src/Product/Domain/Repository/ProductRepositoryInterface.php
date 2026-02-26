@@ -1,8 +1,8 @@
 <?php
 
-namespace Flat101\Product\Domain\Repository;
+namespace App\Product\Domain\Repository;
 
-use Flat101\Product\Domain\Entity\Product;
+use App\Product\Domain\Entity\Product;
 
 interface ProductRepositoryInterface
 {

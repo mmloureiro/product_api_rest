@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Infrastructure\Controller;
+namespace App\Product\Infrastructure\Controller;
 
-use Flat101\Product\Application\Update\UpdateProductUseCase;
-use Flat101\Product\Domain\Exception\ProductNotFoundException;
-use Flat101\Product\Infrastructure\Dto\ProductRequestDto;
+use App\Product\Application\Update\UpdateProductUseCase;
+use App\Product\Domain\Exception\ProductNotFoundException;
+use App\Product\Infrastructure\Dto\ProductRequestDto;
 use InvalidArgumentException;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

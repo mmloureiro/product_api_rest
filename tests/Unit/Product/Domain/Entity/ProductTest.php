@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Tests\Unit\Product\Domain\Entity;
+namespace App\Tests\Unit\Product\Domain\Entity;
 
-use Flat101\Product\Domain\Entity\Product;
-use Flat101\Product\Domain\ValueObject\ProductName;
-use Flat101\Product\Domain\ValueObject\ProductPrice;
+use App\Product\Domain\Entity\Product;
+use App\Product\Domain\ValueObject\ProductName;
+use App\Product\Domain\ValueObject\ProductPrice;
 use DateTimeInterface;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;

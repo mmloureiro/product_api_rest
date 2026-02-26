@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Domain\Exception;
+namespace App\Product\Domain\Exception;
 
 use DomainException;
 

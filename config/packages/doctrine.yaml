@@ -18,11 +18,11 @@ doctrine:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: false
         mappings:
-            Flat101Product:
+            AppProduct:
                 is_bundle: false
                 type: xml
                 dir: '%kernel.project_dir%/src/Product/Infrastructure/Persistence/Mapping'
-                prefix: 'Flat101\Product\Domain\Entity'
+                prefix: 'App\Product\Domain\Entity'
                 alias: Product
         controller_resolver:
             auto_mapping: false

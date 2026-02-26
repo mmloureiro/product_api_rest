@@ -1,10 +1,10 @@
 <?php
 
-namespace Flat101\Product\Infrastructure\Repository;
+namespace App\Product\Infrastructure\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Flat101\Product\Domain\Entity\Product;
-use Flat101\Product\Domain\Repository\ProductRepositoryInterface;
+use App\Product\Domain\Entity\Product;
+use App\Product\Domain\Repository\ProductRepositoryInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ProductRepository extends ServiceEntityRepository implements ProductRepositoryInterface

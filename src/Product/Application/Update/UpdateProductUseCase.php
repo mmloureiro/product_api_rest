@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Application\Update;
+namespace App\Product\Application\Update;
 
-use Flat101\Product\Application\Dto\ProductResponseDto;
-use Flat101\Product\Domain\Exception\ProductNotFoundException;
-use Flat101\Product\Domain\Repository\ProductRepositoryInterface;
-use Flat101\Product\Domain\ValueObject\ProductName;
-use Flat101\Product\Domain\ValueObject\ProductPrice;
+use App\Product\Application\Dto\ProductResponseDto;
+use App\Product\Domain\Exception\ProductNotFoundException;
+use App\Product\Domain\Repository\ProductRepositoryInterface;
+use App\Product\Domain\ValueObject\ProductName;
+use App\Product\Domain\ValueObject\ProductPrice;
 
 class UpdateProductUseCase
 {

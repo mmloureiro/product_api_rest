@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Domain\Entity;
+namespace App\Product\Domain\Entity;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Flat101\Product\Domain\ValueObject\ProductName;
-use Flat101\Product\Domain\ValueObject\ProductPrice;
+use App\Product\Domain\ValueObject\ProductName;
+use App\Product\Domain\ValueObject\ProductPrice;
 
 class Product
 {

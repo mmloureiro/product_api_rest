@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Infrastructure\Controller;
+namespace App\Product\Infrastructure\Controller;
 
-use Flat101\Product\Application\Find\FindProductUseCase;
-use Flat101\Product\Domain\Exception\ProductNotFoundException;
+use App\Product\Application\Find\FindProductUseCase;
+use App\Product\Domain\Exception\ProductNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

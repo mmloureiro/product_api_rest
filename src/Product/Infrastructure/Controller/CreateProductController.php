@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Infrastructure\Controller;
+namespace App\Product\Infrastructure\Controller;
 
 use Exception;
-use Flat101\Product\Application\Create\CreateProductUseCase;
-use Flat101\Product\Infrastructure\Dto\ProductRequestDto;
+use App\Product\Application\Create\CreateProductUseCase;
+use App\Product\Infrastructure\Dto\ProductRequestDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;

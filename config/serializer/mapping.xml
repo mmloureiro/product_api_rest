@@ -4,7 +4,7 @@
             xsi:schemaLocation="http://symfony.com/schema/dic/serializer-mapping
                 https://symfony.com/schema/dic/serializer-mapping/serializer-mapping-1.0.xsd">
 
-    <class name="Flat101\Product\Domain\Entity\Product">
+    <class name="App\Product\Domain\Entity\Product">
         <attribute name="id">
             <group>product:read</group>
         </attribute>

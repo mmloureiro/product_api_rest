@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Application\Find;
+namespace App\Product\Application\Find;
 
-use Flat101\Product\Application\Dto\ProductResponseDto;
-use Flat101\Product\Domain\Exception\ProductNotFoundException;
-use Flat101\Product\Domain\Repository\ProductRepositoryInterface;
+use App\Product\Application\Dto\ProductResponseDto;
+use App\Product\Domain\Exception\ProductNotFoundException;
+use App\Product\Domain\Repository\ProductRepositoryInterface;
 
 class FindProductUseCase
 {

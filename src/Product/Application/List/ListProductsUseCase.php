@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Application\List;
+namespace App\Product\Application\List;
 
-use Flat101\Product\Application\Dto\ProductResponseDto;
-use Flat101\Product\Domain\Entity\Product;
-use Flat101\Product\Domain\Repository\ProductRepositoryInterface;
+use App\Product\Application\Dto\ProductResponseDto;
+use App\Product\Domain\Entity\Product;
+use App\Product\Domain\Repository\ProductRepositoryInterface;
 
 class ListProductsUseCase
 {

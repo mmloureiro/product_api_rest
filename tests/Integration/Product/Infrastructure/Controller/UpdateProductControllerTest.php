@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Tests\Integration\Product\Infrastructure\Controller;
+namespace App\Tests\Integration\Product\Infrastructure\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;

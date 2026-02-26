@@ -1,10 +1,10 @@
 <?php
 
-namespace Flat101\Tests\Integration\Product\Infrastructure\Controller;
+namespace App\Tests\Integration\Product\Infrastructure\Controller;
 
-use Flat101\Product\Domain\Entity\Product;
-use Flat101\Product\Domain\ValueObject\ProductName;
-use Flat101\Product\Domain\ValueObject\ProductPrice;
+use App\Product\Domain\Entity\Product;
+use App\Product\Domain\ValueObject\ProductName;
+use App\Product\Domain\ValueObject\ProductPrice;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,7 +33,7 @@ class ProductControllerTest extends WebTestCase
 
     private function cleanDatabase(): void
     {
-        $this->entityManager->createQuery('DELETE FROM Flat101\Product\Domain\Entity\Product')->execute();
+        $this->entityManager->createQuery('DELETE FROM App\Product\Domain\Entity\Product')->execute();
     }
 
     public function testGetProductsReturns200(): void

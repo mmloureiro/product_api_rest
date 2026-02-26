@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Flat101\Product\Application\Dto;
+namespace App\Product\Application\Dto;
 
-use Flat101\Product\Domain\Entity\Product;
+use App\Product\Domain\Entity\Product;
 
 final readonly class ProductResponseDto
 {
