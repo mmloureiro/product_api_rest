@@ -3,21 +3,24 @@
 namespace Flat101\Tests\Integration\Product\Infrastructure\Controller;
 
 use Flat101\Product\Domain\Entity\Product;
+use Flat101\Product\Domain\ValueObject\ProductName;
+use Flat101\Product\Domain\ValueObject\ProductPrice;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductControllerTest extends WebTestCase
 {
-    private $client;
-    private $entityManager;
+    private KernelBrowser $client;
+    private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
         $this->client        = static::createClient();
-        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $this->entityManager = $this->client->getContainer()->get('doctrine.orm.entity_manager');
 
         $this->cleanDatabase();
     }
@@ -30,11 +33,7 @@ class ProductControllerTest extends WebTestCase
 
     private function cleanDatabase(): void
     {
-        $products = $this->entityManager->getRepository(Product::class)->findAll();
-        foreach ($products as $product) {
-            $this->entityManager->remove($product);
-        }
-        $this->entityManager->flush();
+        $this->entityManager->createQuery('DELETE FROM Flat101\Product\Domain\Entity\Product')->execute();
     }
 
     public function testGetProductsReturns200(): void
@@ -60,8 +59,8 @@ class ProductControllerTest extends WebTestCase
     public function testGetProductsReturnsProductsList(): void
     {
         // Crear productos de prueba
-        $product1 = new Product('Test Product 1', 99.99);
-        $product2 = new Product('Test Product 2', 149.99);
+        $product1 = new Product(new ProductName('Test Product 1'), new ProductPrice(99.99));
+        $product2 = new Product(new ProductName('Test Product 2'), new ProductPrice(149.99));
 
         $this->entityManager->persist($product1);
         $this->entityManager->persist($product2);
@@ -80,7 +79,7 @@ class ProductControllerTest extends WebTestCase
 
     public function testGetProductsReturnsCorrectStructure(): void
     {
-        $product = new Product('Structured Product', 79.99);
+        $product = new Product(new ProductName('Structured Product'), new ProductPrice(79.99));
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();
@@ -96,7 +95,7 @@ class ProductControllerTest extends WebTestCase
 
         $this->assertIsInt($data[0]['id']);
         $this->assertIsString($data[0]['name']);
-        $this->assertIsFloat($data[0]['price']);
+        $this->assertIsNumeric($data[0]['price']);
         $this->assertIsString($data[0]['createdAt']);
 
         // Verificar que createdAt es una fecha válida
@@ -131,7 +130,7 @@ class ProductControllerTest extends WebTestCase
                                        ->findOneBy(['name' => 'Smartphone XYZ']);
 
         $this->assertNotNull($product);
-        $this->assertEquals(499.99, $product->getPrice());
+        $this->assertEquals(499.99, $product->getPrice()->amount());
     }
 
     public function testCreateProductReturns400WithInvalidData(): void
@@ -156,11 +155,9 @@ class ProductControllerTest extends WebTestCase
 
         $response = $this->client->getResponse();
 
-        // 1. Verifica primero el status para que sea más fácil depurar
-        // Recuerda que MapRequestPayload suele devolver 422
+        // MapRequestPayload suele devolver 422 Unprocessable Entity
         $this->assertEquals(422, $response->getStatusCode());
 
-        // 2. Ahora sí, decodifica y verifica
         $data = json_decode($response->getContent(), true);
 
         $this->assertIsArray($data, 'La respuesta no es un JSON válido');
@@ -170,7 +167,7 @@ class ProductControllerTest extends WebTestCase
     public function testGetProductByIdReturns200(): void
     {
         // 1. Creamos un producto directamente con Doctrine
-        $product = new Product('Find Me', 50.0);
+        $product = new Product(new ProductName('Find Me'), new ProductPrice(50.0));
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
@@ -206,4 +203,3 @@ class ProductControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
 }
-
