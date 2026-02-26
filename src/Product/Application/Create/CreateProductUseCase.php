@@ -25,6 +25,7 @@ class CreateProductUseCase
         );
 
         $this->repository->save($product);
+        $this->repository->flush();
 
         return ProductResponseDto::fromEntity($product);
     }

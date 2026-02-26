@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Product\Application\Delete;
 
+use App\Product\Domain\Exception\ProductNotFoundException;
 use App\Product\Domain\Repository\ProductRepositoryInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeleteProductUseCase
 {
@@ -19,9 +19,10 @@ class DeleteProductUseCase
         $product = $this->repository->find($id);
 
         if (!$product) {
-            throw new NotFoundHttpException("Product with ID $id not found");
+            throw ProductNotFoundException::fromId($id);
         }
 
         $this->repository->remove($product);
+        $this->repository->flush();
     }
 }

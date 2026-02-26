@@ -27,12 +27,15 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
     public function save(Product $product): void
     {
         $this->getEntityManager()->persist($product);
-        $this->getEntityManager()->flush();
     }
 
     public function remove(Product $product): void
     {
         $this->getEntityManager()->remove($product);
+    }
+
+    public function flush(): void
+    {
         $this->getEntityManager()->flush();
     }
 }

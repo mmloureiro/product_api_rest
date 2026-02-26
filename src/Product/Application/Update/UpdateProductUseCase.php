@@ -31,6 +31,7 @@ class UpdateProductUseCase
         );
 
         $this->repository->save($product);
+        $this->repository->flush();
 
         return ProductResponseDto::fromEntity($product);
     }

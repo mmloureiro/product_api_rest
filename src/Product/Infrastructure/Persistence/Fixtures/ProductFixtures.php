@@ -3,6 +3,8 @@
 namespace App\Product\Infrastructure\Persistence\Fixtures;
 
 use App\Product\Domain\Entity\Product;
+use App\Product\Domain\ValueObject\ProductName;
+use App\Product\Domain\ValueObject\ProductPrice;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -24,7 +26,10 @@ class ProductFixtures extends Fixture
         ];
 
         foreach ($products as $productData) {
-            $product = new Product($productData['name'], $productData['price']);
+            $product = new Product(
+                new ProductName($productData['name']),
+                new ProductPrice($productData['price'])
+            );
 
             $manager->persist($product);
         }

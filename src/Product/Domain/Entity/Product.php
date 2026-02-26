@@ -18,8 +18,8 @@ class Product
 
     public function __construct(ProductName $name, ProductPrice $price)
     {
-        $this->name = $name->value();
-        $this->price = $price->amountInCents();
+        $this->setName($name);
+        $this->setPrice($price);
         $this->createdAt = new DateTimeImmutable();
     }
 
@@ -33,11 +33,19 @@ class Product
         return new ProductName($this->name);
     }
 
+    private function setName(ProductName $name): void
+    {
+        $this->name = $name->value();
+    }
+
     public function getPrice(): ProductPrice
     {
-        // This is a bit tricky with internal primitive storage for Doctrine, 
-        // but we return the Value Object to maintain domain integrity.
         return new ProductPrice($this->price / 100);
+    }
+
+    private function setPrice(ProductPrice $price): void
+    {
+        $this->price = $price->amountInCents();
     }
 
     public function getCreatedAt(): DateTimeInterface
@@ -47,7 +55,7 @@ class Product
 
     public function update(ProductName $name, ProductPrice $price): void
     {
-        $this->name = $name->value();
-        $this->price = $price->amountInCents();
+        $this->setName($name);
+        $this->setPrice($price);
     }
 }

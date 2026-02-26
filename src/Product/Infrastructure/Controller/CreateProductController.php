@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Product\Infrastructure\Controller;
 
-use Exception;
 use App\Product\Application\Create\CreateProductUseCase;
 use App\Product\Infrastructure\Dto\ProductRequestDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -62,12 +61,8 @@ class CreateProductController extends AbstractController
         #[MapRequestPayload] ProductRequestDto $dto,
         CreateProductUseCase $useCase
     ): JsonResponse {
-        try {
-            $productResponse = $useCase->execute($dto->name, $dto->price);
+        $productResponse = $useCase->execute($dto->name, $dto->price);
 
-            return new JsonResponse($productResponse, Response::HTTP_CREATED);
-        } catch (Exception $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
-        }
+        return new JsonResponse($productResponse, Response::HTTP_CREATED);
     }
 }

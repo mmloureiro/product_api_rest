@@ -8,7 +8,6 @@ use App\Product\Application\Delete\DeleteProductUseCase;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use OpenApi\Attributes as OA;
 
@@ -44,15 +43,8 @@ class DeleteProductController extends AbstractController
     )]
     public function __invoke(int $id, DeleteProductUseCase $useCase): JsonResponse
     {
-        try {
-            $useCase->execute($id);
+        $useCase->execute($id);
 
-            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
-        } catch (NotFoundHttpException $e) {
-            return new JsonResponse(
-                ['error' => $e->getMessage(), 'code' => 404],
-                Response::HTTP_NOT_FOUND
-            );
-        }
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }

@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Product\Infrastructure\Controller;
 
 use App\Product\Application\Update\UpdateProductUseCase;
-use App\Product\Domain\Exception\ProductNotFoundException;
 use App\Product\Infrastructure\Dto\ProductRequestDto;
-use InvalidArgumentException;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -62,20 +60,8 @@ class UpdateProductController extends AbstractController
         #[MapRequestPayload] ProductRequestDto $dto,
         UpdateProductUseCase $useCase
     ): JsonResponse {
-        try {
-            $productResponse = $useCase->execute($id, $dto->name, $dto->price);
+        $productResponse = $useCase->execute($id, $dto->name, $dto->price);
 
-            return new JsonResponse($productResponse, Response::HTTP_OK);
-        } catch (ProductNotFoundException $e) {
-            return new JsonResponse(
-                ['error' => $e->getMessage()],
-                Response::HTTP_NOT_FOUND
-            );
-        } catch (InvalidArgumentException $e) {
-            return new JsonResponse(
-                ['error' => $e->getMessage()],
-                Response::HTTP_BAD_REQUEST
-            );
-        }
+        return new JsonResponse($productResponse, Response::HTTP_OK);
     }
 }
