@@ -9,7 +9,7 @@ API RESTful para gestión de productos desarrollada con Symfony 6.4 y PHP 8.3, s
 - ✅ Validación de datos con DTOs
 - ✅ Documentación OpenAPI/Swagger
 - ✅ Tests unitarios e integración
-- ✅ Base de datos SQLite
+- ✅ Base de datos PostgreSQL
 
 ## 📋 Requisitos Previos
 
@@ -170,7 +170,7 @@ src/Product/
 - **Framework**: Symfony 6.4
 - **PHP**: 8.3
 - **ORM**: Doctrine ORM 3.6
-- **Base de datos**: SQLite
+- **Base de datos**: PostgreSQL
 - **Testing**: PHPUnit
 - **Documentación API**: Nelmio API Doc Bundle (OpenAPI/Swagger)
 
@@ -195,16 +195,22 @@ Se implementa validación en dos niveles:
 
 ## 🐛 Solución de Problemas
 
-### Error: "No such file or directory" al ejecutar migraciones
+### Error al conectar con la base de datos
+Asegúrate de que los contenedores están corriendo y el servicio de base de datos está saludable:
 ```bash
-mkdir -p var
-php bin/console doctrine:migrations:migrate
-# O usando Make:
-make setup-db
+docker-compose ps
 ```
 
-### Los tests fallan por permisos
+### Resetear el entorno completo
+Si necesitas limpiar todo y empezar de cero:
 ```bash
+make init
+```
+
+### Permisos en carpeta var/
+El Dockerfile ya gestiona los permisos mediante ACL, pero si tuvieses problemas:
+```bash
+make shell
 chmod -R 777 var/
 ```
 

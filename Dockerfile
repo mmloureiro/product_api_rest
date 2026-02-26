@@ -1,52 +1,96 @@
-FROM php:8.3-fpm
+# syntax=docker/dockerfile:1.4
+
+# 1. Base image for PHP extensions
+FROM php:8.3-fpm-alpine AS app_php
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apk add --no-cache \
+    acl \
+    fcgi \
+    file \
+    gettext \
     git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libsqlite3-dev \
-    sqlite3 \
-    zip \
-    unzip \
     libzip-dev \
-    libicu-dev \
-    && rm -rf /var/lib/apt/lists/*
+    zlib-dev \
+    icu-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    postgresql-dev \
+    postgresql-client \
+    linux-headers \
+    zip
 
-# Install PHP extensions
-RUN docker-php-ext-configure intl \
-    && docker-php-ext-install -j$(nproc) \
-        pdo_sqlite \
-        pdo_mysql \
-        zip \
+# Install PHP extensions and build dependencies temporarily
+RUN set -eux; \
+    apk add --no-cache --virtual .build-deps \
+        autoconf \
+        g++ \
+        make \
+    ; \
+    \
+    docker-php-ext-configure gd --with-freetype --with-jpeg; \
+    docker-php-ext-install -j$(nproc) \
         intl \
-        opcache
+        pdo_pgsql \
+        zip \
+        opcache \
+        gd \
+    ; \
+    pecl install apcu; \
+    pecl install xdebug-3.4.1; \
+    docker-php-ext-enable apcu xdebug; \
+    \
+    runDeps="$( \
+        scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
+            | tr ',' '\n' \
+            | sort -u \
+            | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+    )"; \
+    apk add --no-cache --virtual .app-phpexts-rundeps $runDeps; \
+    \
+    apk del .build-deps
 
-# Install Xdebug
-RUN pecl install xdebug-3.3.1 \
-    && docker-php-ext-enable xdebug
-
-# Copy Xdebug configuration
-COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
-# Copy custom PHP configuration
-COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
-
-# Get latest Composer
+# Get Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u 1000 -d /home/symfony symfony
-RUN mkdir -p /home/symfony/.composer && \
-    chown -R symfony:symfony /home/symfony
+# 2. Composer stage (dependencies)
+FROM app_php AS app_composer
 
-USER symfony
+# Copy only composer files first to leverage Docker cache
+COPY composer.json composer.lock symfony.lock ./
+RUN set -eux; \
+    composer install --prefer-dist --no-autoloader --no-scripts --no-progress; \
+    composer clear-cache
+
+# 3. Final image
+FROM app_php AS app_runtime
+
+# Copy PHP config
+COPY docker/php/php.ini $PHP_INI_DIR/conf.d/app.ini
+COPY docker/php/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
+
+# Copy project files
+COPY --link . .
+
+# Copy dependencies from composer stage
+COPY --from=app_composer /var/www/html/vendor ./vendor
+
+# Finalize composer (dump-autoload)
+RUN set -eux; \
+    mkdir -p var/cache var/log; \
+    composer dump-autoload --optimize --classmap-authoritative; \
+    composer run-script post-install-cmd; \
+    chmod -R 777 var/
+
+# Permissions fix using ACL
+RUN set -eux; \
+    chown -R www-data:www-data /var/www/html; \
+    setfacl -R -m u:www-data:rwX -m u:$(whoami):rwX var; \
+    setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var
+
+USER www-data
 
 EXPOSE 9000
-
-
